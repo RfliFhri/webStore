@@ -38,9 +38,9 @@ class ProductResource extends Resource
                         ->label('Product Name'),
                     TextInput::make('sku')
                         ->label('SKU')
-                        ->unique(),
+                        ->unique(ignoreRecord: true),
                     TextInput::make('slug')
-                        ->unique(),
+                        ->unique(ignoreRecord: true),
                     SpatieTagsInput::make('tags')
                         ->type('collection')
                         ->label('Colection'),
