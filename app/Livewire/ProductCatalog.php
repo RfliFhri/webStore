@@ -8,15 +8,68 @@ use App\Data\ProductData;
 use App\Models\Product;
 use App\Models\Tag;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class ProductCatalog extends Component
 {
+    use WithPagination;
+
+    public $queryString = [
+        'select_collection' => ['except' => []],
+        'search' => ['except' => []],
+        'sort_by' => ['except' => 'newest']
+    ];
+
+    public array $select_collection = [];
+
+    public string $search = '';
+
+    public string $sort_by = 'newest';
+
+    public function applyFilters() {
+        $this->resetPage();
+    }
+
+    public function resetFilters() {
+        $this->select_collection = [];
+        $this->search = '';
+        $this->sort_by = 'newest';
+        $this->resetPage();
+    }
+
     public function render()
-    {
+    {        
         $collection_query = Tag::query()->withType('collection')->withCount('products')->get();
-        $query = Product::paginate(6);
+        // $query = Product::paginate(6);
+
+        $result = Product::query();
+
+        if ($this->search) {
+            $result->where('name', 'LIKE', "%{$this->search}%");
+        }
+
+        if (!empty($this->select_collection)) {
+            $result->whereHas('tags', function($result){
+                $result->whereIn('id', $this->select_collection);
+            });
+        }
+
+        switch ($this->sort_by) {
+            case 'latest':
+                $result->oldest();
+                break;
+            case 'price_asc':
+                $result->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $result->orderBy('price', 'desc');
+            default:
+                $result->latest();
+                break;
+        }
+
         // TODO make a DTO
-        $products = ProductData::collect($query);
+        $products = ProductData::collect($result->paginate(6));
         $collections = ProductCollectionData::collect($collection_query);
 
         return view('livewire.product-catalog', compact('products', 'collections'));
