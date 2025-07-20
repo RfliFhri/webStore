@@ -16,6 +16,8 @@
                                         {{ $item->product()->name }}
                                     </h3>
                                     <h2 class="text-sm text-gray-800">{{ $item->product()->short_desc }}</h2>
+                                    <h3 class="text-sm text-gray-600">Stock <span
+                                            class="font-bold text-gray-700">{{ $item->product()->stock }}</span></h3>
                                     <div class="flex items-center gap-2 my-5">
 
                                         <livewire:add-to-cart wire:key="add-to-cart-{{ $item->product()->sku }}"
@@ -25,6 +27,8 @@
                                             {{ $item->product()->price_formatted }}
                                         </p>
 
+
+                                        <livewire:cart-item-remove :product="$item->product()" />
 
                                     </div>
                                 </div>
