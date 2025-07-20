@@ -20,7 +20,9 @@ class AddToCart extends Component
 
     public int $weight;
 
-    public function mount(ProductData $product, CartServiceInterFace $cart) {
+    public bool $incart = false;
+
+    public function mount(ProductData $product, CartServiceInterFace $cart ) {
         $this->sku = $product->sku;
         $this->price = $product->price;
         $this->stock = $product->stock;
@@ -48,6 +50,8 @@ class AddToCart extends Component
         ));
 
         $this->dispatch('cart-updated');
+
+        return redirect()->route('cart');
     }
 
     public function render()
