@@ -17,17 +17,20 @@ class SessionCartService implements CartServiceInterFace
     protected string $session_key = 'cart';
 
     /** @param Collection<int, CartItemData> $items */
-    protected function save(Collection $items) : void {
+    protected function save(Collection $items) : void 
+    {
         Session::put($this->session_key, $items->values()->all());
     }
 
-    protected function load() : DataCollection {
+    protected function load() : DataCollection 
+    {
         $raw = Session::get($this->session_key, []);
 
         return new DataCollection(CartItemData::class, $raw);
     }
 
-    public function addOrUpdate(CartItemData $item) : void {
+    public function addOrUpdate(CartItemData $item) : void 
+    {
         // 1. tarik data
         $collections = $this->load()->toCollection();
         $updated = false;
@@ -51,7 +54,8 @@ class SessionCartService implements CartServiceInterFace
 
     }
 
-    public function remove(string $sku) : void {
+    public function remove(string $sku) : void 
+    {
         $cart = $this->load()->toCollection()
             ->reject(fn(CartItemData $i) => $i->sku === $sku)
             ->values()
@@ -60,11 +64,13 @@ class SessionCartService implements CartServiceInterFace
         $this->save($cart);
     }
 
-    public function getItemBySku(string $sku) : ?CartItemData {
+    public function getItemBySku(string $sku) : ?CartItemData 
+    {
         return $this->load()->toCollection()->first(fn(CartItemData $item) => $item->sku === $sku);
     }
 
-    public function all() : CartData {
+    public function all() : CartData 
+    {
         return new CartData($this->load());
     }
 }
