@@ -1,0 +1,14 @@
+<?php
+declare(strict_types=1);
+
+namespace APP\Contract;
+
+use App\Data\CartData;
+use App\Data\CartItemData;
+
+interface CartServiceInterFace {
+    public function addOrUpdate(CartItemData $item) : void;
+    public function remove(string $sku) : void;
+    public function getItemBySku(string $sku) : ?CartItemData;
+    public function all() : CartData;
+}

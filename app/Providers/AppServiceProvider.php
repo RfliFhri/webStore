@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use APP\Contract\CartServiceInterFace;
+use App\Services\SessionCartService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Number;
 use Illuminate\Support\ServiceProvider;
@@ -13,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(CartServiceInterFace::class, SessionCartService::class);
     }
 
     /**
