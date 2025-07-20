@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace APP\Contract;
+namespace App\Contract;
 
 use App\Data\CartData;
 use App\Data\CartItemData;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use APP\Contract\CartServiceInterFace;
+use App\Contract\CartServiceInterFace;
 use App\Data\CartData;
 use App\Data\CartItemData;
 use Illuminate\Support\Collection;
