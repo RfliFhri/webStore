@@ -4,9 +4,11 @@ namespace App\Livewire;
 
 use App\Contract\CartServiceInterFace;
 use App\Data\CartData;
+use App\Data\RegionData;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Number;
 use Livewire\Component;
+use Spatie\LaravelData\DataCollection;
 
 class Checkout extends Component
 {
@@ -15,7 +17,13 @@ class Checkout extends Component
         'full_name' => null,
         'email' => null,
         'phone' => null,
-        'address_line' => null
+        'address_line' => null,
+        'destination_region_code' => null
+    ];
+
+    public array $region_selector = [
+        'keyword' => null,
+        'region_selected' => null,
     ];
 
     public array $summaries = [
@@ -42,8 +50,14 @@ class Checkout extends Component
             'data.full_name' => ['required', 'min:3', 'max:225'],
             'data.email' => ['required', 'email:dns'],
             'data.phone' => ['required', 'integer', 'min:7', 'max:14'],
-            'data.address_line' => ['required', 'min:3']
+            'data.address_line' => ['required', 'min:3'],
+            'data.destination_region_code' => ['required']
         ];
+    }
+
+    public function updatedRegionSelectorRegionSelected($value) 
+    {
+        data_set($this->data, 'destination_region_code', $value);
     }
 
     public function placeAnOrder()
@@ -71,6 +85,45 @@ class Checkout extends Component
     public function getCartProperty(CartServiceInterFace $cart) : CartData
     {
         return $cart->all();
+    }
+
+    public function getRegionsProperty() : DataCollection 
+    {
+        $data = [
+            [
+                'code' => '001',
+                'province' => 'Jawa Timur',
+                'city' => 'Ponorogo',
+                'district' => 'district',
+                'sub_district' => 'sub_district',
+                'postal_code' => '12345'
+            ],
+            [
+                'code' => '002',
+                'province' => 'Jawa Timur',
+                'city' => 'Madiun',
+                'district' => 'district',
+                'sub_district' => 'sub_district',
+                'postal_code' => '67890'
+            ]
+        ];
+
+        if (!data_get($this->region_selector, 'keyword')){
+            $data = [];
+        }
+
+        return new DataCollection(RegionData::class, $data);
+    }
+
+    public function getRegionProperty() : ?RegionData 
+    {
+        $region_selected = data_get($this->region_selector, 'region_selected');
+
+        if (!$region_selected) {
+            return null;
+        }
+
+        return $this->regions->toCollection()->first(fn(RegionData $region) => $region->code == $region_selected);
     }
 
     public function render()
