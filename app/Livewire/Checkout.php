@@ -5,6 +5,7 @@ namespace App\Livewire;
 use App\Contract\CartServiceInterFace;
 use App\Data\CartData;
 use App\Data\RegionData;
+use App\Services\RegionQueryService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Number;
 use Livewire\Component;
@@ -87,35 +88,19 @@ class Checkout extends Component
         return $cart->all();
     }
 
-    public function getRegionsProperty() : DataCollection 
+    public function getRegionsProperty(RegionQueryService $query_service) : DataCollection 
     {
-        $data = [
-            [
-                'code' => '001',
-                'province' => 'Jawa Timur',
-                'city' => 'Ponorogo',
-                'district' => 'district',
-                'sub_district' => 'sub_district',
-                'postal_code' => '12345'
-            ],
-            [
-                'code' => '002',
-                'province' => 'Jawa Timur',
-                'city' => 'Madiun',
-                'district' => 'district',
-                'sub_district' => 'sub_district',
-                'postal_code' => '67890'
-            ]
-        ];
 
-        if (!data_get($this->region_selector, 'keyword')){
-            $data = [];
+        $region_code = data_get($this->region_selector, 'keyword');
+        if (!$region_code){
+            return new DataCollection(RegionData::class, []);
         }
 
-        return new DataCollection(RegionData::class, $data);
+        return $query_service->searchRegionByName($region_code);
+
     }
 
-    public function getRegionProperty() : ?RegionData 
+    public function getRegionProperty(RegionQueryService $query_service) : ?RegionData 
     {
         $region_selected = data_get($this->region_selector, 'region_selected');
 
@@ -123,7 +108,7 @@ class Checkout extends Component
             return null;
         }
 
-        return $this->regions->toCollection()->first(fn(RegionData $region) => $region->code == $region_selected);
+        return $query_service->searchRegionByCode($region_selected);
     }
 
     public function render()
