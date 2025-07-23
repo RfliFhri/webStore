@@ -5,7 +5,9 @@ namespace App\Livewire;
 use App\Contract\CartServiceInterFace;
 use App\Data\CartData;
 use App\Data\RegionData;
+use App\Data\ShippingData;
 use App\Services\RegionQueryService;
+use App\Services\ShippingMethodService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Number;
 use Livewire\Component;
@@ -61,13 +63,6 @@ class Checkout extends Component
         data_set($this->data, 'destination_region_code', $value);
     }
 
-    public function placeAnOrder()
-    {
-        $this->validate();
-
-        dd($this->data);
-    }
-
     public function calculateTotal() 
     {
         data_set($this->summaries, 'sub_total', $this->cart->total);
@@ -109,6 +104,36 @@ class Checkout extends Component
         }
 
         return $query_service->searchRegionByCode($region_selected);
+    }
+
+    /** @return DataCollection<ShippingData> */
+    public function getShippingMethodsProperty(
+        RegionQueryService $region_query,
+        ShippingMethodService $shipping_service
+    ) : DataCollection
+    {
+        if (! data_get($this->data, 'destination_region_code')) {
+            return new DataCollection(ShippingData::class, []);
+        }
+
+        $origin_code = config('shipping.shipping_origin_code');
+
+    //     if (! $origin_code) {
+    //     throw new \Exception('Origin code belum diset di config/shipping.php');
+    // }
+
+        return $shipping_service->getShippingMethods(
+            $region_query->searchRegionByCode($origin_code),
+            $region_query->searchRegionByCode(data_get($this->data, 'destination_region_code')),
+            $this->cart
+        );
+    }
+
+    public function placeAnOrder()
+    {
+        $this->validate();
+
+        dd($this->data);
     }
 
     public function render()
