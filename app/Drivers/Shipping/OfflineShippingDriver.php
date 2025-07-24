@@ -62,7 +62,7 @@ class OfflineShippingDriver implements ShippingDriverInterface
                     'destination' => $destination
                 ]);
                 break;
-            case 'offline-flat-15':
+            case 'offline-flat-5':
                 $data = ShippingData::from([
                     'driver' => $this->driver,
                     'courier' => $shipping_service->courier,
