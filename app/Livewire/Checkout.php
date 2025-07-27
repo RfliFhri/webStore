@@ -73,7 +73,7 @@ class Checkout extends Component
             'data.full_name' => ['required', 'min:3', 'max:225'],
             'data.email' => ['required', 'email:dns'],
             'data.phone' => ['required', 'min:7', 'max:14'],
-            'data.address_line' => ['required', 'min:3'],
+            'data.address_line' => ['required', 'min:3', 'max:255'],
             'data.destination_region_code' => ['required', 'exists:regions,code'],
             'data.shipping_hash' => ['required', new ValidShippingHash()],
             'data.payment_method_hash' => ['required', new ValidPaymentMethodHash()]

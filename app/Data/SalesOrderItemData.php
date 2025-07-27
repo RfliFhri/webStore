@@ -25,7 +25,7 @@ class SalesOrderItemData extends Data
         public int $quantity,
         public float $price,
         public float $total,
-        public float $weight
+        public int $weight
     ) {
         $this->price_formatted = Number::currency($price);
         $this->total_formatted = Number::currency($total);
