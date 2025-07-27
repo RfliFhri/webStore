@@ -7,7 +7,7 @@ use Spatie\LaravelData\Data;
 class SalesShippingData extends Data
 {
     public function __construct(
-        public string $dirver,
+        public string $driver,
         public string|null $receipt_number,
         public string $courier,
         public string $service,
