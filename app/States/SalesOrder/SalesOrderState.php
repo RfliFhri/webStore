@@ -5,6 +5,9 @@ declare(strict_types=1);
 
 namespace App\States\SalesOrder;
 
+use App\States\SalesOrder\Transitions\PendingToCancel;
+use App\States\SalesOrder\Transitions\PendingToProgress;
+use App\States\SalesOrder\Transitions\ProgressToSuccess;
 use Spatie\ModelStates\State;
 use Spatie\ModelStates\StateConfig;
 
@@ -16,8 +19,8 @@ abstract class SalesOrderState extends State
     {
         return parent::config()
             ->default(Pending::class)
-            ->allowTransition(Pending::class, Progress::class)
-            ->allowTransition(Pending::class, Cancel::class)
-            ->allowTransition(Progress::class, Success::class);
+            ->allowTransition(Pending::class, Progress::class, PendingToProgress::class)
+            ->allowTransition(Pending::class, Cancel::class, PendingToCancel::class)
+            ->allowTransition(Progress::class, Success::class, ProgressToSuccess::class);
     }
 }
