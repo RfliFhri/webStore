@@ -92,7 +92,7 @@ class SalesOrderData extends Data
 
         shipping: new SalesShippingData(
             driver: $sales_order->shipping_driver,
-            receipt_number: null,
+            receipt_number: $sales_order->shipping_receipt_number,
             courier: $sales_order->shipping_courier,
             service: $sales_order->shipping_service,
             estimated_delivery: $sales_order->shipping_estimated_delivery,
@@ -104,7 +104,7 @@ class SalesOrderData extends Data
             method: $sales_order->payment_method,
             label: $sales_order->payment_label,
             payload: $sales_order->payment_payload,
-            paid_at: $sales_order->payment_paid_at
+            paid_at: $sales_order->payment_paid_at ? Carbon::parse($sales_order->payment_paid_at) : null
         ),
 
         sub_total: $sales_order->sub_total,
