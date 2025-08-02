@@ -55,6 +55,9 @@ class BackPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ])
+            ->plugins([
+                \BezhanSalleh\FilamentShield\FilamentShieldPlugin::make(),
+            ])
             ->plugin(
                 BreezyCore::make()
                 ->myProfile(
